@@ -17,6 +17,8 @@ public class CustomWebApplicationServer {
 
     private final int port;
 
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
+
     public CustomWebApplicationServer(int port) {
         this.port = port;
     }
@@ -32,7 +34,7 @@ public class CustomWebApplicationServer {
                 logger.info("[CustomWebApplicationServer] client connected!");
 
                 // 2. 사용자 요청이 들어올 때마다 Thread를 새로 생성해서 사용자 요청을 처리하도록 한다.
-                new Thread(new ClientRequestHandler(clientSocket)).start();
+                executorService.execute(new Thread(new ClientRequestHandler(clientSocket)));
             }
         }
     }
